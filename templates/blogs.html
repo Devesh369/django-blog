@@ -1,0 +1,282 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome to Blog Post!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #1a6ef5;
+      --primary-dark: #1355cc;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --bg: #ffffff;
+      --sidebar-bg: #f9fafb;
+      --card-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      --radius: 10px;
+    }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 2.5rem clamp(1rem, 4vw, 2rem);
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 2.5rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .row { grid-template-columns: 1fr; }
+      .sidebar { order: 2; }
+    }
+
+    /* ── ARTICLE ── */
+    article header { margin-bottom: 1.5rem; }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.9rem, 4vw, 2.8rem);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .post-meta {
+      color: var(--muted);
+      font-style: italic;
+      font-size: 0.92rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-family: sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      text-decoration: none;
+      letter-spacing: 0.3px;
+      transition: background 0.2s;
+    }
+    .badge:hover { background: var(--primary-dark); }
+
+    .post-image {
+      width: 100%;
+      border-radius: var(--radius);
+      display: block;
+      margin: 1.5rem 0;
+      aspect-ratio: 900 / 400;
+      object-fit: cover;
+      background: #ced4da;
+    }
+
+    /* placeholder grey box when no real image */
+    .img-placeholder {
+      width: 100%;
+      aspect-ratio: 900 / 400;
+      background: #ced4da;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem 0;
+      color: #9ca3af;
+      font-family: sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+    }
+
+    .post-content p {
+      font-size: clamp(1rem, 2vw, 1.1rem);
+      margin-bottom: 1.25rem;
+      color: #2d3748;
+    }
+    .post-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin: 2rem 0 0.75rem;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .sidebar-card {
+      background: var(--sidebar-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--card-shadow);
+    }
+
+    .sidebar-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-style: italic;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    /* Search */
+    .search-wrap {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .search-wrap input {
+      flex: 1;
+      padding: 0.5rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+    .search-wrap input:focus { border-color: var(--primary); }
+    .search-wrap button {
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-family: sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .search-wrap button:hover { background: var(--primary-dark); }
+
+    /* Categories */
+    .categories-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem 1rem;
+    }
+    .categories-grid a {
+      color: var(--primary);
+      text-decoration: none;
+      font-family: sans-serif;
+      font-size: 0.93rem;
+      transition: color 0.2s;
+    }
+    .categories-grid a:hover { color: var(--primary-dark); text-decoration: underline; }
+
+    /* Follow Us */
+    .follow-links { display: flex; flex-direction: column; gap: 0.4rem; }
+    .follow-links a {
+      color: var(--primary);
+      text-decoration: none;
+      font-family: sans-serif;
+      font-size: 0.93rem;
+      transition: color 0.2s;
+    }
+    .follow-links a:hover { color: var(--primary-dark); text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 4rem;
+      border-top: 1px solid var(--border);
+      padding: 1.5rem clamp(1rem, 5vw, 3rem);
+      text-align: center;
+      font-family: sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+  
+
+  <!-- Page Content -->
+  <div class="container">
+    <div class="row">
+
+      <!-- Main Column -->
+      <main>
+        <article>
+          <!-- Post Header -->
+          <header>
+            <h1>{{single_blog.title}}</h1>
+            <div class="post-meta">{{single_blog.created_at}} by {{single_blog.author}}</div>
+            <a class="badge" href="#">{{single_blog.category}}</a>
+          </header>
+
+          <!-- Preview Image -->
+          <!-- Replace the div below with <img class="post-image" src="your-image.jpg" alt="Blog Post Image" /> -->
+          <img class="post-image" src="{{single_blog.featured_image.url}}"  alt="Blog Post Image" /></div>
+
+          <!-- Post Content -->
+          <section class="post-content">
+            <h5>{{single_blog.short_description}}</h5>
+            <p>{{single_blog.blog_body}}</p>
+          </section>
+        </article>
+      </main>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+
+        <!-- Search -->
+       
+
+        <!-- Categories -->
+        <div class="sidebar-card">
+             <h3>Categories</h3>
+            {% for cat in categories %}
+            <li><a href="{% url 'posts_by_category' cat.id %}">{{cat.category_name}}</a></li>
+            {% endfor %}
+         
+         
+        </div>
+
+        <!-- Follow Us -->
+         {% if social_links %}
+        <div class="sidebar-card">
+          <h3>Follow Us</h3>
+          <div class="follow-links">
+            {% for i in social_links %}
+           <li> <a href="{{i.link}}">{{i.platform}}</a></li>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2023 The Blog &mdash; Built with HTML &amp; CSS
+  </footer>
+
+</body>
+</html>
+
+{% endblock %}
