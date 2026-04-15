@@ -4,6 +4,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -22,6 +23,7 @@
           </div>
           <div class="col-4">
             <form action="{% url 'search' %}"  method="GET">
+             
           <div class="search-wrap">
             <input type="text" placeholder="Enter search term…" aria-label="Search" name="keyword" value="{{ keyword }}"/>
             <button class="btn btn-warning" type="submit">Go!</button>
@@ -33,7 +35,7 @@
             <a class="btn btn-sm btn-warning" href="{% url 'login' %}">Signin</a> &nbsp;
             <a class="btn btn-sm btn-outline-secondary" href="{% url 'register' %}">Signup</a>
             {% else %}
-            <span>Welcome {{user}}</span>
+            <span><a href="{% url 'dashboard' %} ">Dashboard</a></span>
             &emsp;
             <span><a href="{% url 'logout' %}">Logout</a></span>
           </div>

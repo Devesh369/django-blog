@@ -27,13 +27,20 @@ def blogs(request, slug):
 
 
 def search(request):
+    keyword = request.GET.get('keyword', '').strip()
+    blogs = Blog.objects.none()
 
-    # if request.method == 'GET':
-    keyword = request.GET.get('keyword')
-    blogs = Blog.objects.filter(Q(title__icontains = keyword) | Q(short_description__icontains = keyword) | Q(blog_body__icontains = keyword) , status = 'Published')
+    if keyword:
+        blogs = Blog.objects.filter(
+            Q(title__icontains=keyword) |
+            Q(short_description__icontains=keyword) |
+            Q(blog_body__icontains=keyword),
+            status='Published'
+        )
+
     context = {
-        'blogs' : blogs,
-        'keyword':keyword,
+        'blogs': blogs,
+        'keyword': keyword,
     }
    
-    return render(request, 'search.html',context)
+    return render(request, 'search.html', context)
