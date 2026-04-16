@@ -237,10 +237,44 @@
           <section class="post-content">
             <h5>{{single_blog.short_description}}</h5>
             <p>{{single_blog.blog_body}}</p>
-          </section>
+          
+      <!-- Comments Section -->
+      <h5>Comments ({{comment_count}})</h5>
+      {% if comments %}
+        {% for comment in comments %}
+          <div class="card mt-1">
+            <div class="card-body">
+                <p class="card-text mb-0">{{ comment.comment }} </p>
+                <span>
+                  <small>By, {{comment.user}}</small>
+                  <small> {{comment.created_at | timesince }} ago</small>
+                </span>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No comments yet. Be the first to comment!</p>
+        {% endif %}
+         <br><br>
+         <div>
+          {% if user.is_authenticated %}
+            <form method="POST">
+              {% csrf_token %}
+              <div class="form-group">
+                <Textarea name="comment"  placeholder="Write your comment here..." class="form-control"></Textarea>
+                <input type="submit" value="submit" class="btn btn-primary mt-2">
+              </div>
+            </form>
+            {% else %}
+              <p>Please <span><a href="{% url 'login' %}">Login</a></span> to post a comment.</p>
+            {% endif %}
+         </div>
+
+
+      </section>
         </article>
       </main>
-
+<br><br>
       <!-- Sidebar -->
       <aside class="sidebar">
 
@@ -273,7 +307,7 @@
   </div>
 
   <footer>
-    &copy; 2023 The Blog &mdash; Built with HTML &amp; CSS
+     <p>Django blog built with ❤️ by <a href="#">Devesh Patel</a></p>
   </footer>
 
 </body>

@@ -167,3 +167,4 @@ def delete_users(request, pk):
     user = User.objects.get(pk = pk)
     user.delete()
     return redirect('users')
+

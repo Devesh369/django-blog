@@ -1,6 +1,6 @@
 from django.shortcuts import render , get_object_or_404 , redirect
-from django.http import HttpResponse 
-from .models import Blog , Category
+from django.http import HttpResponseRedirect
+from .models import Blog , Category ,Comment
 from django.db.models import Q  #Q for cpmplex and or query lookup
 
 
@@ -19,8 +19,23 @@ def posts_by_category(request,category_id):
 
 def blogs(request, slug):
     single_blog = get_object_or_404(Blog, slug=slug, status='Published')
+    if request.method == 'POST':
+        comment = Comment()
+        comment.user = request.user
+        comment.blog = single_blog
+        comment.comment = request.POST['comment']
+        comment.save()
+        return HttpResponseRedirect(request.path_info) #it back to page from where the req. come from
+
+    #comments
+    comments = Comment.objects.filter(blog = single_blog)
+    comment_count = comments.count()
+    print('commetnt is ', comments)
     context = {
         'single_blog': single_blog,
+        'comments': comments,
+        'comment_count': comment_count,
+
     }
     return render(request, 'blogs.html', context)
 
