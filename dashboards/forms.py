@@ -1,6 +1,7 @@
 from django import forms
 from blogs.models import Category , Blog
-
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -13,3 +14,14 @@ class PostForm(forms.ModelForm):
         model = Blog
         fields = ('title','category','featured_image','short_description','blog_body','status','is_featured')
         
+
+class AddUserForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('username','email','first_name','last_name','is_active','is_staff','is_superuser','groups','user_permissions')
+
+# for edit need new form because, UserCreationform provides passwords fields automatically and Manager not allow to change it for any user.
+class EdituserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username','email','first_name','last_name','is_active','is_staff','is_superuser','groups','user_permissions')
