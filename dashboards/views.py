@@ -84,6 +84,7 @@ def posts(request):
     }
     return render (request , 'dashboard/posts.html',context)
 
+#@login_required(login_url='login')
 def add_posts(request):  # for image insert must add enctype in form and here request.FILES.
     if not request.user.has_perm('blogs.add_blog'):
         return redirect('posts')
