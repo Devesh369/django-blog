@@ -5,6 +5,8 @@ from .forms import CategoryForm , PostForm , AddUserForm , EdituserForm
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import permission_required
+from django.contrib import messages
 
 # Create your views here.
 
@@ -24,18 +26,29 @@ def categories(request):
     return render(request, 'dashboard/categories.html')
 
 
+
 def add_category(request):
+    if not request.user.has_perm('blogs.add_category'):
+      #  messages.error(request, "You do not have permission to add category. Ask admin.")
+        return redirect('categories')
+    
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('categories')
+        
     form = CategoryForm()
     context = {'form':form }
     return render(request , 'dashboard/add_category.html',context)
 
 
+
 def edit_category(request,pk):
+    if not request.user.has_perm('blogs.edit_category'):
+        # messages.error(request, "You do not have permission to edit category. Ask admin.")
+        return redirect('categories')
+    
     category = get_object_or_404(Category , pk = pk)
 
     if request.method == 'POST':
@@ -52,14 +65,18 @@ def edit_category(request,pk):
     return render (request , 'dashboard/edit_category.html',context)
 
 
-def delete_category(request , pk):
-    cat = get_object_or_404(Category , pk = pk)
+def delete_category(request, pk):
+    if not request.user.has_perm('blogs.delete_category'):
+       # messages.error(request, "You do not have permission. Ask admin.")
+        return redirect('categories')
+
+    cat = get_object_or_404(Category, pk=pk)
     cat.delete()
+    messages.success(request, "Category deleted successfully.")
     return redirect('categories')
 
 
 # POST CRUD
-
 def posts(request):
     posts = Blog.objects.all()
     context = {
@@ -68,6 +85,9 @@ def posts(request):
     return render (request , 'dashboard/posts.html',context)
 
 def add_posts(request):  # for image insert must add enctype in form and here request.FILES.
+    if not request.user.has_perm('blogs.add_post'):
+        return redirect('posts')
+    
     if request.method == "POST":
         form = PostForm(request.POST , request.FILES)
         if form.is_valid():
@@ -92,6 +112,9 @@ def add_posts(request):  # for image insert must add enctype in form and here re
 
 
 def edit_posts(request , pk):
+    if not request.user.has_perm('blogs.edit_post'):
+        return redirect('posts')
+    
     posts = get_object_or_404(Blog, pk = pk)
     if request.method == 'POST':
         form = PostForm(request.POST , request.FILES ,  instance= posts ) 
@@ -111,6 +134,9 @@ def edit_posts(request , pk):
 
 
 def delete_posts(request, pk):
+    if not request.user.has_perm('blogs.delete_post'):
+        return redirect('posts')
+    
     blog = get_object_or_404(Blog , pk = pk)
     blog.delete()
     return redirect('posts')
