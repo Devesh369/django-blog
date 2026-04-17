@@ -30,13 +30,13 @@ def home(request):
 def page_not_found(request,Except):
     return render(request, '404.html', status=404)
 
-
+# register new user
 def register(request):
     if request.method=="POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('register')
+            return redirect('home')
         
     else:
      #form = RegistrationForm(request.GET)
