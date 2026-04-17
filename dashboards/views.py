@@ -85,7 +85,7 @@ def posts(request):
     return render (request , 'dashboard/posts.html',context)
 
 def add_posts(request):  # for image insert must add enctype in form and here request.FILES.
-    if not request.user.has_perm('blogs.add_post'):
+    if not request.user.has_perm('blogs.add_blog'):
         return redirect('posts')
     
     if request.method == "POST":
@@ -112,7 +112,7 @@ def add_posts(request):  # for image insert must add enctype in form and here re
 
 
 def edit_posts(request , pk):
-    if not request.user.has_perm('blogs.edit_post'):
+    if not request.user.has_perm('blogs.change_blog'):
         return redirect('posts')
     
     posts = get_object_or_404(Blog, pk = pk)
@@ -134,7 +134,8 @@ def edit_posts(request , pk):
 
 
 def delete_posts(request, pk):
-    if not request.user.has_perm('blogs.delete_post'):
+    if not request.user.has_perm('blogs.delete_blog'):
+
         return redirect('posts')
     
     blog = get_object_or_404(Blog , pk = pk)
