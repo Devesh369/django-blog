@@ -34,6 +34,7 @@ def add_category(request):
     
     if request.method == 'POST':
         form = CategoryForm(request.POST)
+        print(form.errors)
         if form.is_valid():
             form.save()
             return redirect('categories')
